@@ -40,7 +40,7 @@ public class PinchImageView extends ImageView  {
     //手势状态：禁止手势
     public static final int PINCH_MODE_NO_PINCH = 3;
 
-	private static final float MIN_SCALE = 0.1f;
+	private static final float MIN_SCALE = 0.3f;
 
 
 
@@ -360,6 +360,9 @@ public class PinchImageView extends ImageView  {
                     float[] lineCenter = MathUtils.getCenterPoint(event.getX(0), event.getY(0), event.getX(1), event.getY(1));
                     mLastMovePoint.set(lineCenter[0], lineCenter[1]);
                     //处理缩放
+                    if ((mScaleBase * distance)<MIN_SCALE) {
+						return true;
+					}
             			scale(mScaleCenter, mScaleBase, distance, mLastMovePoint);
                 }
             }
