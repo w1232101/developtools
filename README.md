@@ -10,3 +10,4 @@ SPUtil：快速使用SharePrefrence
 Res：提供各种资源目录(value,drawable,raw,xml,anim..)id的值的读取
 ScreenUtils:单位之间的转换dp px sp，隐藏键盘
 CommonAdapter：通用的adapter(listview，gridview通用，recycleview通用的没加入，推荐鸿阳大神的CommonAdapter);
+CrashHandler:处理app抛出的异常
