@@ -1,7 +1,7 @@
 # developtools
 框架特点：
-/n1.图片加载glide，缓存okhttp，手势缩放PinchImageView，
-/n2.网络请求封装MyOkhttpUtil(封装的鸿阳大神的)，
+1.图片加载glide，缓存okhttp，手势缩放PinchImageView，
+2.网络请求封装MyOkhttpUtil(封装的鸿阳大神的)，
 3.DialogUtils：showToast()(自定义CToast);showProgressBar：自定义LoadingDialog;
 4.Url参数加密UrlDecryption.my
 5.各种Utils：
