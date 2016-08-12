@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+    <!-- 红色 -->
+    <color name="red">#d71345</color>
+    <!-- 紫色 -->
+    <color name="zise">#6950a1</color>
+    <!-- 绿色 -->
+    <color name="lvse">#1d953f</color>
+    <!-- 黑色 -->
+    <color name="black">#000000</color>
+
+</resources>
