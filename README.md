@@ -1,4 +1,5 @@
 # developtools
+运行效果是一个下拉刷新的随机图片查看器
 框架特点：
 1.图片加载glide，缓存okhttp，手势缩放PinchImageView，
 2.网络请求封装MyOkhttpUtil(封装的鸿阳大神的)，

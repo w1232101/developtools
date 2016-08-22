@@ -1,6 +1,8 @@
 package lib.system.uitle;
 
+import android.app.Activity;
 import android.content.Context;
+import android.graphics.Rect;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 /**隐藏键盘*/
@@ -11,7 +13,24 @@ public class ScreenUtils {
 				.hideSoftInputFromWindow(editView.getWindowToken(),
 						InputMethodManager.HIDE_NOT_ALWAYS);
 	}
-
+	public static int getStatusHeight(Activity activity) { 
+		int statusHeight = 0; 
+		Rect localRect = new Rect(); 
+		activity.getWindow().getDecorView().getWindowVisibleDisplayFrame(localRect); 
+		statusHeight = localRect.top; 
+		if (0 == statusHeight) { 
+		Class<?> localClass; 
+		try { 
+		localClass = Class.forName("com.android.internal.R$dimen"); 
+		Object localObject = localClass.newInstance(); 
+		int i5 = Integer.parseInt(localClass.getField("status_bar_height").get(localObject).toString()); 
+		statusHeight = activity.getResources().getDimensionPixelSize(i5); 
+		} catch (Exception e) { 
+		e.printStackTrace(); 
+		} 
+		} 
+		return statusHeight; 
+		}
     /** 
      * 根据手机的分辨率从 dp 的单位 转成为 px(像素) 
      */  

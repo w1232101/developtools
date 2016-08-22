@@ -11,6 +11,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 import lib.system.uitle.CrashHandler;
+import lib.system.uitle.NetUtils;
 import android.app.Application;
 import android.content.Context;
 import android.util.Log;
