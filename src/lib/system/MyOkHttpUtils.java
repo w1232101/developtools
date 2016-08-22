@@ -1,4 +1,4 @@
-package lib.system;
+package lib.system.uitle;
 
 import java.util.List;
 import java.util.Map;
@@ -11,11 +11,7 @@ import com.zhy.http.okhttp.request.RequestCall;
 
 import android.app.Activity;
 import android.content.Context;
-import android.os.Handler;
-import android.os.Message;
 import lib.system.tools.DLog;
-import lib.system.uitle.DialogUtils;
-import lib.system.uitle.MyCallBack;
 import okhttp3.Call;
 
 public class MyOkHttpUtils {
@@ -40,55 +36,39 @@ public class MyOkHttpUtils {
 		return MyOkHttpUtils;
 	}
 
-	private static Handler handler = new Handler() {
-		@Override
-		public void handleMessage(Message msg) {
-			int tag = msg.what;
-			if (tag == ERROR_CODE) {
-				 mCallBack.httpCallBackErr(tag, tag);//一般不需要复写该方法，特殊情况可打开注释复写错误的回调
-				DialogUtils.closeProgressDialog();
-				return;
-			}
-			Object src = msg.obj;
-			mCallBack.httpCallBackSucc(tag, src);
-			DialogUtils.closeProgressDialog();
-		}
-	};
-
 	public void getHttp(String urlString, String tag) {
 		this.TAG = tag;
-		if(!((Activity)context).isFinishing())
-		 {
+		if (!((Activity) context).isFinishing()) {
 			DialogUtils.showProgressDialog(context);
-		 }
+		}
 		call = OkHttpUtils.get().url(urlString).tag(tag).build();
 		call.execute(new StringCallback() {
 			@Override
 			public void onResponse(String response, int arg1) {
 				DLog.d("返回数据：" + response + "int" + arg1);
-				Message message = new Message();
-				message.what = TAG.hashCode();
-				message.obj = response;
-				handler.sendMessage(message);
+
 			}
 
 			@Override
 			public void onError(Call arg0, Exception arg1, int arg2) {
-				Message message = new Message();
-				message.what = ERROR_CODE;
-				handler.sendMessage(message);
-				DialogUtils.showToast("网络异常", 0);
-				DLog.d("网络错误：：" + arg0 + "Exception：" + arg1 + "代码号：" + arg2);
+				error(arg0, arg1, arg2);
 			}
+
 		});
+	}
+
+	private void error(Call arg0, Exception arg1, int arg2) {
+		DialogUtils.closeProgressDialog();
+		DialogUtils.showToast("网络异常", 0);
+		mCallBack.httpCallBackErr(TAG.hashCode(), arg1);
+		DLog.d("网络错误：：" + arg0 + "Exception：" + arg1 + "代码号：" + arg2);
 	}
 
 	public <T> void getHttp(String urlString, String tag, final Class<T> cls) {
 		this.TAG = tag;
-		if(!((Activity)context).isFinishing())
-		 {
+		if (!((Activity) context).isFinishing()) {
 			DialogUtils.showProgressDialog(context);
-		 }
+		}
 		call = OkHttpUtils.get().url(urlString).tag(tag).build();
 		call.execute(new StringCallback() {
 			@Override
@@ -100,25 +80,26 @@ public class MyOkHttpUtils {
 				} catch (Exception e) {
 				}
 				DLog.d("返回数据：" + response + "int" + arg1);
-				Message message = new Message();
-				message.what = TAG.hashCode();
-				message.obj = t;
-				handler.sendMessage(message);
+				succ(t);
 			}
 
 			@Override
 			public void onError(Call arg0, Exception arg1, int arg2) {
-				DLog.d("网络错误：：" + arg0 + "Exception：" + arg1 + "代码号：" + arg2);
+				error(arg0, arg1, arg2);
 			}
 		});
 	}
 
+	private <T> void succ(T t) {
+		mCallBack.httpCallBackSucc(TAG.hashCode(), t);
+		DialogUtils.closeProgressDialog();
+	}
+
 	public <T> void getHttpList(String urlString, String tag, final Class<T> cls) {
 		this.TAG = tag;
-		if(!((Activity)context).isFinishing())
-		 {
+		if (!((Activity) context).isFinishing()) {
 			DialogUtils.showProgressDialog(context);
-		 }
+		}
 		call = OkHttpUtils.get().url(urlString).tag(tag).build();
 		call.execute(new StringCallback() {
 			@Override
@@ -131,25 +112,22 @@ public class MyOkHttpUtils {
 				} catch (Exception e) {
 				}
 				DLog.d("返回数据：" + response + "int" + arg1);
-				Message message = new Message();
-				message.what = TAG.hashCode();
-				message.obj = t;
-				handler.sendMessage(message);
+				succ(t);
 			}
 
 			@Override
 			public void onError(Call arg0, Exception arg1, int arg2) {
-				DLog.d("网络错误：：" + arg0 + "Exception：" + arg1 + "代码号：" + arg2);
+				error(arg0, arg1, arg2);
 			}
 		});
 	}
-	public <T> void postHttpList(String urlString,Map<String, String> params, String tag, final Class<T> cls) {
-		//TODO
+
+	public <T> void postHttpList(String urlString, Map<String, String> params, String tag, final Class<T> cls) {
+		// TODO
 		this.TAG = tag;
-		if(!((Activity)context).isFinishing())
-		 {
+		if (!((Activity) context).isFinishing()) {
 			DialogUtils.showProgressDialog(context);
-		 }
+		}
 		call = OkHttpUtils.post().url(urlString).params(params).tag(tag).build();
 		call.execute(new StringCallback() {
 			@Override
@@ -162,27 +140,23 @@ public class MyOkHttpUtils {
 				} catch (Exception e) {
 				}
 				DLog.d("返回数据：" + response + "int" + arg1);
-				Message message = new Message();
-				message.what = TAG.hashCode();
-				message.obj = t;
-				handler.sendMessage(message);
+				succ(t);
 			}
 
 			@Override
 			public void onError(Call arg0, Exception arg1, int arg2) {
-				DLog.d("网络错误：：" + arg0 + "Exception：" + arg1 + "代码号：" + arg2);
+				error(arg0, arg1, arg2);
 			}
 		});
-		
-		
+
 	}
-	public <T> void postHttp(String urlString,Map<String, String> params, String tag, final Class<T> cls) {
-		//TODO
+
+	public <T> void postHttp(String urlString, Map<String, String> params, String tag, final Class<T> cls) {
+		// TODO
 		this.TAG = tag;
-		if(!((Activity)context).isFinishing())
-		 {
+		if (!((Activity) context).isFinishing()) {
 			DialogUtils.showProgressDialog(context);
-		 }
+		}
 		call = OkHttpUtils.post().url(urlString).params(params).tag(tag).build();
 		call.execute(new StringCallback() {
 			@Override
@@ -193,39 +167,39 @@ public class MyOkHttpUtils {
 				} catch (Exception e) {
 				}
 				DLog.d("返回数据：" + response + "int" + arg1);
-				Message message = new Message();
-				message.what = TAG.hashCode();
-				message.obj = t;
-				handler.sendMessage(message);
+				succ(t);
 			}
 
 			@Override
 			public void onError(Call arg0, Exception arg1, int arg2) {
-				DLog.d("网络错误：：" + arg0 + "Exception：" + arg1 + "代码号：" + arg2);
+				error(arg0, arg1, arg2);
 			}
 		});
-		
+
 	}
-	//上传下载直接使用张鸿阳提供的github上的demo,使用简单！！！！！！！！！！！ TODO
-//	public <T> void postUploadFiles(String urlString, String tag,File file, final Class<T> cls) {
-//		//TODO
-//		 File file = new File(Environment.getExternalStorageDirectory(), "messenger_01.png");
-//	        if (!file.exists())
-//	        {
-//	            Toast.makeText(context, "文件不存在，请修改文件路径", Toast.LENGTH_SHORT).show();
-//	            return;
-//	        }
-//	        OkHttpUtils
-//	                .postFile()
-//	                .url(urlString)
-//	                .file(file)
-//	                .build()
-//	                .execute(new MyStringCallback());
-//		
-//	}
-//	public <T> void postDownloadFile(String urlString, String tag, final Class<T> cls) {
-//		//TODO
-//		
-//		
-//	}
+	// 上传下载直接使用张鸿阳提供的github上的demo,使用简单！！！！！！！！！！！ TODO
+	// public <T> void postUploadFiles(String urlString, String tag,File file,
+	// final Class<T> cls) {
+	// //TODO
+	// File file = new File(Environment.getExternalStorageDirectory(),
+	// "messenger_01.png");
+	// if (!file.exists())
+	// {
+	// Toast.makeText(context, "文件不存在，请修改文件路径", Toast.LENGTH_SHORT).show();
+	// return;
+	// }
+	// OkHttpUtils
+	// .postFile()
+	// .url(urlString)
+	// .file(file)
+	// .build()
+	// .execute(new MyStringCallback());
+	//
+	// }
+	// public <T> void postDownloadFile(String urlString, String tag, final
+	// Class<T> cls) {
+	// //TODO
+	//
+	//
+	// }
 }
